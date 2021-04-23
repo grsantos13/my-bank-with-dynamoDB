@@ -1,5 +1,6 @@
 package br.com.gn.model
 
+import br.com.gn.dto.NewCustomerRequest
 import br.com.gn.shared.annotation.Model
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey
@@ -23,11 +24,18 @@ class Customer(
 
     @field:NotBlank
     @field:Email
-    @DynamoDBRangeKey(attributeName = "sk")
     var email: String?
 ) {
+    fun update(request: NewCustomerRequest) {
+        name = request.name
+        phone = request.phone
+        email = request.email
+    }
 
     @DynamoDBHashKey(attributeName = "pk")
-    var id: String = "#CUSTOMER#${UUID.randomUUID()}"
+    var id: String = "CUSTOMER#"
+
+    @DynamoDBRangeKey(attributeName = "sk")
+    var sk: String = "CTMR#${UUID.randomUUID()}"
 
 }

@@ -15,3 +15,10 @@ data class NewCustomerRequest(
         return Customer(name, phone, email)
     }
 }
+
+class CustomerResponse(customer: Customer) {
+    val id = customer.sk.split("#")[1]
+    val name = customer.name
+    val email = customer.email
+    val phone = customer.phone
+}

@@ -1,13 +1,11 @@
 package br.com.gn.controller
 
+import br.com.gn.dto.CustomerResponse
 import br.com.gn.dto.NewCustomerRequest
 import br.com.gn.model.Customer
 import br.com.gn.shared.manager.EntityManager
 import io.micronaut.http.HttpResponse
-import io.micronaut.http.annotation.Body
-import io.micronaut.http.annotation.Controller
-import io.micronaut.http.annotation.Get
-import io.micronaut.http.annotation.Post
+import io.micronaut.http.annotation.*
 import io.micronaut.validation.Validated
 import javax.inject.Inject
 import javax.validation.Valid
@@ -21,12 +19,36 @@ class CustomerController(
     @Post
     fun persist(@Body @Valid request: NewCustomerRequest): HttpResponse<Any> {
         val customer = request.toModel()
-        manager.persist(customer)
-        return HttpResponse.ok(customer)
+        manager.save(customer)
+        return HttpResponse.ok(CustomerResponse(customer))
     }
 
     @Get
-    fun findAll(): HttpResponse<Any>{
-        return HttpResponse.ok(manager.find<Customer>())
+    fun findAll(): HttpResponse<Any> {
+        val customers = manager.findByPkAndSk<Customer>("CUSTOMER#", "CTMR#")
+            .map(::CustomerResponse)
+        return HttpResponse.ok(customers)
+    }
+
+    @Get("/{id}")
+    fun findById(@PathVariable id: String): HttpResponse<Any> {
+        val customer = manager.findById<Customer>("CUSTOMER#", "CTMR#$id")
+            ?: throw IllegalArgumentException("Not found")
+        return HttpResponse.ok(CustomerResponse(customer))
+    }
+
+    @Put("/{id}")
+    fun update(@PathVariable id: String, @Body @Valid request: NewCustomerRequest): HttpResponse<Any> {
+        val customer = manager.findById<Customer>("CUSTOMER#", "CTMR#$id")
+            ?: throw IllegalArgumentException("Not found")
+        customer.update(request)
+        manager.save(customer)
+        return HttpResponse.ok(CustomerResponse(customer))
+    }
+
+    @Delete("/{id}")
+    fun delete(@PathVariable id: String): HttpResponse<Any> {
+        manager.delete<Customer>("CUSTOMER#", "CTMR#$id")
+        return HttpResponse.ok()
     }
 }
