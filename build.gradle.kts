@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.kapt") version "1.4.10"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.4.10"
     id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("org.jetbrains.kotlin.plugin.noarg") version "1.4.10"
     id("io.micronaut.application") version "1.3.4"
 }
 
@@ -36,6 +37,9 @@ dependencies {
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
 }
 
+noArg {
+    annotation("br.com.gn.shared.annotation.NoArg")
+}
 
 application {
     mainClass.set("br.com.gn.ApplicationKt")
