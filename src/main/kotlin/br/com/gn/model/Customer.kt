@@ -2,13 +2,12 @@ package br.com.gn.model
 
 import br.com.gn.dto.CustomerRequest
 import br.com.gn.shared.annotation.Model
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
+import com.amazonaws.services.dynamodbv2.datamodeling.*
 import java.util.*
+import javax.validation.Valid
 import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotNull
 
 @Model
 @DynamoDBTable(tableName = "bank")
@@ -16,20 +15,26 @@ class Customer(
 
     @field:NotBlank
     @DynamoDBAttribute(attributeName = "name")
-    var name: String?,
+    var name: String,
 
     @field:NotBlank
     @DynamoDBAttribute(attributeName = "phone")
-    var phone: String?,
+    var phone: String,
 
     @field:NotBlank
     @field:Email
-    var email: String?
+    var email: String,
+
+    @field:Valid
+    @field:NotNull
+    @DynamoDBAttribute(attributeName = "address")
+    @DynamoDBTypeConvertedJson
+    var address: Address
 ) {
     fun update(request: CustomerRequest) {
-        name = request.name
-        phone = request.phone
-        email = request.email
+        name = request.name!!
+        phone = request.phone!!
+        email = request.email!!
     }
 
     @DynamoDBHashKey(attributeName = "pk")
