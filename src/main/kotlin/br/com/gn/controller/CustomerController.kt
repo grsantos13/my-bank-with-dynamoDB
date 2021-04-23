@@ -1,7 +1,7 @@
 package br.com.gn.controller
 
 import br.com.gn.dto.CustomerResponse
-import br.com.gn.dto.NewCustomerRequest
+import br.com.gn.dto.CustomerRequest
 import br.com.gn.model.Customer
 import br.com.gn.shared.manager.EntityManager
 import io.micronaut.http.HttpResponse
@@ -17,7 +17,7 @@ class CustomerController(
 ) {
 
     @Post
-    fun persist(@Body @Valid request: NewCustomerRequest): HttpResponse<Any> {
+    fun persist(@Body @Valid request: CustomerRequest): HttpResponse<Any> {
         val customer = request.toModel()
         manager.save(customer)
         return HttpResponse.ok(CustomerResponse(customer))
@@ -38,7 +38,7 @@ class CustomerController(
     }
 
     @Put("/{id}")
-    fun update(@PathVariable id: String, @Body @Valid request: NewCustomerRequest): HttpResponse<Any> {
+    fun update(@PathVariable id: String, @Body @Valid request: CustomerRequest): HttpResponse<Any> {
         val customer = manager.findById<Customer>("CUSTOMER#", "CTMR#$id")
             ?: throw IllegalArgumentException("Not found")
         customer.update(request)

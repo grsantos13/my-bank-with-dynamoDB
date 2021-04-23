@@ -6,7 +6,7 @@ import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 
 @Introspected
-data class NewCustomerRequest(
+data class CustomerRequest(
     @field:NotBlank var name: String?,
     @field:NotBlank var phone: String?,
     @field:NotBlank @field:Email var email: String?

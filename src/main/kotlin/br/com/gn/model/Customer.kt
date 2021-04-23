@@ -1,6 +1,6 @@
 package br.com.gn.model
 
-import br.com.gn.dto.NewCustomerRequest
+import br.com.gn.dto.CustomerRequest
 import br.com.gn.shared.annotation.Model
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey
@@ -26,7 +26,7 @@ class Customer(
     @field:Email
     var email: String?
 ) {
-    fun update(request: NewCustomerRequest) {
+    fun update(request: CustomerRequest) {
         name = request.name
         phone = request.phone
         email = request.email
