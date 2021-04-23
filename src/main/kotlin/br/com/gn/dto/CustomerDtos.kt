@@ -26,3 +26,8 @@ class CustomerResponse(customer: Customer) {
     val phone = customer.phone
     val address = customer.address
 }
+
+class SimpleCustomerResponse(customer: Customer) {
+    val name = customer.name
+    val email = customer.email
+}
