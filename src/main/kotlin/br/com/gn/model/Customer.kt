@@ -44,3 +44,14 @@ class Customer(
     var sk: String = "CTMR#${UUID.randomUUID()}"
 
 }
+
+@Model
+data class Address(
+    @field:NotBlank val street: String?,
+    @field:NotBlank val number: String?,
+    @field:NotBlank val district: String?,
+    @field:NotBlank val city: String?,
+    @field:NotBlank val state: String?,
+    @field:NotBlank val country: String?,
+    @field:NotBlank val complement: String?,
+)
