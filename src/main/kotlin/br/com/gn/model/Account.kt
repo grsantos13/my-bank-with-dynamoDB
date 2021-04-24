@@ -28,8 +28,13 @@ class Account(
     var type: AccountType
 ) {
 
+    companion object {
+        const val PREFIX = "ACCOUNT#"
+        fun withPrefix(value: String) = "$PREFIX$value"
+    }
+
     @DynamoDBRangeKey(attributeName = "sk")
-    var sk: String = "ACT#${UUID.randomUUID()}"
+    var sk: String = "$PREFIX${UUID.randomUUID()}"
 
     fun update(request: AccountRequest) {
         number = request.number

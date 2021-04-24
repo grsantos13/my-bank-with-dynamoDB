@@ -31,6 +31,12 @@ class Customer(
     @DynamoDBTypeConvertedJson
     var address: Address
 ) {
+
+    companion object {
+        const val PREFIX = "CUSTOMER#"
+        fun withPrefix(value: String) = "$PREFIX$value"
+    }
+
     fun update(request: CustomerRequest) {
         name = request.name!!
         phone = request.phone!!
@@ -38,10 +44,10 @@ class Customer(
     }
 
     @DynamoDBHashKey(attributeName = "pk")
-    var id: String = "CUSTOMER#"
+    var id: String = PREFIX
 
     @DynamoDBRangeKey(attributeName = "sk")
-    var sk: String = "CTMR#${UUID.randomUUID()}"
+    var sk: String = "$PREFIX${UUID.randomUUID()}"
 
 }
 

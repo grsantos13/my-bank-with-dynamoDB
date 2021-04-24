@@ -1,11 +1,12 @@
 package br.com.gn.dto
 
-import br.com.gn.exception.NotFoundException
+import br.com.gn.exception.BankException
 import br.com.gn.model.Account
 import br.com.gn.model.AccountType
 import br.com.gn.model.Customer
 import br.com.gn.shared.manager.EntityManager
 import io.micronaut.core.annotation.Introspected
+import io.micronaut.http.HttpStatus
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotNull
 
@@ -16,13 +17,15 @@ data class AccountRequest(
     @field:NotNull var type: AccountType
 ) {
     fun toModel(manager: EntityManager, customerId: String): Account {
-        manager.findById<Customer>("CUSTOMER#", "CTMR#$customerId")
-            ?: throw NotFoundException("Customer does not exist with id $customerId")
+        val customerIdWithPrefix = Customer.withPrefix(customerId)
+
+        manager.findById<Customer>(Customer.PREFIX, customerIdWithPrefix)
+            ?: throw BankException(HttpStatus.NOT_FOUND, "Customer does not exist with id $customerId")
 
         return Account(
             number = number,
             agency = agency,
-            customerId = "CTMR#$customerId",
+            customerId = customerIdWithPrefix,
             type = type
         )
     }
@@ -37,8 +40,8 @@ class AccountResponse(
 ) {
     companion object {
         fun from(account: Account, manager: EntityManager): AccountResponse {
-            val customer = manager.findById<Customer>("CUSTOMER#", account.customerId)
-                ?: throw NotFoundException("Customer does not exist with id ${account.customerId}")
+            val customer = manager.findById<Customer>(Customer.PREFIX, account.customerId)
+                ?: throw BankException(HttpStatus.NOT_FOUND, "Customer does not exist with id ${account.customerId}")
 
             return with(account) {
                 AccountResponse(

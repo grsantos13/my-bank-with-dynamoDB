@@ -1,5 +1,8 @@
 package br.com.gn.exception
 
-class NotFoundException(
-    msg: String
+import io.micronaut.http.HttpStatus
+
+data class BankException(
+    val httpStatus: HttpStatus,
+    val msg: String
 ) : RuntimeException(msg)
